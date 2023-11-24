@@ -1,0 +1,43 @@
+pip install selenium
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import time
+
+# Configuración del navegador
+driver = webdriver.Chrome()
+
+# Ir a la página web
+driver.get("https://www.demoblaze.com/index.html")
+
+# Dar de alta un usuario
+driver.find_element(By.ID, "signin2").click()
+time.sleep(1)  # Añadir un pequeño retraso para permitir que la página se cargue completamente
+driver.find_element(By.ID, "sign-username").send_keys("tu_usuario")
+driver.find_element(By.ID, "sign-password").send_keys("tu_contraseña")
+driver.find_element(By.XPATH, "//button[contains(text(),'Sign up')]").click()
+
+# Login con el usuario dado de alta
+driver.find_element(By.ID, "login2").click()
+time.sleep(1)
+driver.find_element(By.ID, "loginusername").send_keys("tu_usuario")
+driver.find_element(By.ID, "loginpassword").send_keys("tu_contraseña")
+driver.find_element(By.XPATH, "//button[contains(text(),'Log in')]").click()
+
+# Agregar una laptop al carrito
+driver.find_element(By.XPATH, "//a[contains(text(),'Laptops')]").click()
+driver.find_element(By.XPATH, "//a[contains(text(),'Sony vaio i5')]/following-sibling::p/a").click()
+time.sleep(1)
+driver.find_element(By.XPATH, "//button[contains(text(),'Add to cart')]").click()
+
+# Comprobar que se agregó al carrito
+driver.find_element(By.XPATH, "//a[contains(text(),'Cart')]").click()
+time.sleep(1)
+cart_items = driver.find_elements(By.XPATH, "//table[@class='table table-bordered table-hover table-striped']/tbody/tr")
+assert len(cart_items) == 1, "Error: No se agregó el producto al carrito"
+
+# Logout
+driver.find_element(By.ID, "logout2").click()
+
+# Cerrar el navegador
+driver.quit()
