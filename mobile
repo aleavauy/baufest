@@ -1,0 +1,55 @@
+pip install Appium-Python-Client
+
+from appium import webdriver
+from appium.webdriver.common.mobileby import MobileBy
+from appium.webdriver.common.touch_action import TouchAction
+import time
+
+# Configuración de la aplicación y el dispositivo
+desired_caps = {
+    "platformName": "Android",
+    "deviceName": "tu_dispositivo",
+    "app": "ruta/a/AndroidNativeDemoApp-0.4.0.apk",
+}
+
+# Iniciar la sesión de Appium
+driver = webdriver.Remote("http://localhost:4723/wd/hub", desired_caps)
+
+# Sección Login
+# Realizar Login
+
+driver.find_element(MobileBy.ID, 'username').send_keys('tu_usuario')
+driver.find_element(MobileBy.ID, 'password').send_keys('tu_contraseña')
+driver.find_element(MobileBy.ID, 'login-btn').click()
+
+# Realizar Signup
+driver.find_element(MobileBy.ID, 'signup-link').click()
+
+# Sección forms
+# Completar todos los campos y activar
+
+driver.find_element(MobileBy.ID, 'field1').send_keys('valor1')
+driver.find_element(MobileBy.ID, 'field2').send_keys('valor2')
+driver.find_element(MobileBy.ID, 'field3').send_keys('valor3')
+driver.find_element(MobileBy.ID, 'activate-btn').click()
+
+# Sección Webview
+# Cambiar al contexto de la webview (asegúrate de que la webview está presente)
+webview_context = "webview_context"  # Puedes obtener este valor inspeccionando la aplicación con Appium
+driver.switch_to.context(webview_context)
+
+# Realizar una búsqueda de la palabra "browser" en la webview
+driver.find_element(MobileBy.ID, 'search-input').send_keys('browser')
+driver.find_element(MobileBy.ID, 'search-btn').click()
+
+# Navegar entre los tabs
+tabs = ['Docs', 'API', 'Help', 'Versions', 'Blog', 'Contribute']
+for tab in tabs:
+    driver.find_element(MobileBy.ID, f'tab-{tab}').click()
+    time.sleep(2)  # Dar tiempo para que la pestaña cargue antes de cambiar a la siguiente
+
+# Volver al contexto nativo
+driver.switch_to.context("NATIVE_APP")
+
+# Cerrar la aplicación
+driver.quit()
